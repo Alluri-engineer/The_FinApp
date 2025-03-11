@@ -21,6 +21,11 @@ enum TransactionType: String, Codable {
     case expense = "Expense"
 }
 
+enum CardType: String, Codable {
+    case debit = "DEBIT"
+    case credit = "CREDIT"
+}
+
 @Model
 final class Transaction {
     @Attribute(.unique) var id: UUID
@@ -60,6 +65,7 @@ final class Wallet {
     var balance: Double
     var currency: String
     var name: String
+    var cardType: String
     
     @Relationship(deleteRule: .cascade) var transactions: [Transaction] = []
     var totalIncome: Double
@@ -70,7 +76,8 @@ final class Wallet {
          name: String = "Puja Santosh Wallet",
          transactions: [Transaction] = [], 
          totalIncome: Double = 52700, 
-         totalExpenses: Double = 12422) {
+         totalExpenses: Double = 12422,
+         cardType: String = CardType.debit.rawValue) {
         self.id = UUID()
         self.balance = balance
         self.currency = currency
@@ -78,6 +85,7 @@ final class Wallet {
         self.transactions = transactions
         self.totalIncome = totalIncome
         self.totalExpenses = totalExpenses
+        self.cardType = cardType
         
         // Set the inverse relationship
         for transaction in transactions {
